@@ -1,0 +1,57 @@
+import type { ColumnDef } from '../hooks/useResizableColumns';
+
+export const USER_COLUMNS: ColumnDef[] = [
+  { key: 'userId',    label: '아이디',      width: 110 },
+  { key: 'userName',  label: '사용자명',    width: 90 },
+  { key: 'position',  label: '직책',        width: 80 },
+  { key: 'auth',      label: '권한',        width: 70 },
+  {
+    key: 'programs',
+    label: '프로그램',
+    width: 200,
+    render: (val) => (
+      <span style={{ display: 'flex', gap: 4, justifyContent: 'center', flexWrap: 'wrap' }}>
+        {((val ?? []) as string[]).map((p) => (
+          <span
+            key={p}
+            style={{
+              background: '#00bfa5',
+              color: '#fff',
+              borderRadius: 12,
+              padding: '2px 8px',
+              fontSize: 11,
+              fontWeight: 600,
+            }}
+          >
+            {p}
+          </span>
+        ))}
+      </span>
+    ),
+  },
+  { key: 'lastLogin', label: '최종 접속일', width: 150 },
+  { key: 'phone',     label: '휴대폰',      width: 130 },
+];
+
+export interface UserRow {
+  userId: string;
+  userName: string | null;
+  position: string | null;
+  auth: number;
+  programs: string[];
+  lastLogin: string;
+  phone: string | null;
+}
+
+export const USER_DATA: UserRow[] = [
+  { userId: '081002',    userName: '김성국', position: '차장',   auth: 212, programs: ['영업', '모바일'],                          lastLogin: '2026-04-02 15:40', phone: '01028512491' },
+  { userId: '100700',    userName: '김성철', position: '이사',   auth: 186, programs: ['영업', '조합/세무', '모바일'],              lastLogin: '2026-03-30 14:38', phone: '01066652767' },
+  { userId: '3588',      userName: '전화종', position: '이사',   auth: 120, programs: ['영업'],                                    lastLogin: '2025-02-24 00:00', phone: null },
+  { userId: '6472',      userName: '박상무', position: null,     auth: 10,  programs: ['영업', '모바일'],                          lastLogin: '2026-04-03 06:54', phone: null },
+  { userId: '관제관리',  userName: null,     position: null,     auth: 10,  programs: ['GPS/RT'],                                  lastLogin: '2026-01-09 00:00', phone: null },
+  { userId: '신우출하',  userName: null,     position: null,     auth: 81,  programs: ['출하', 'GPS/RT'],                          lastLogin: '2026-04-03 00:00', phone: null },
+  { userId: '전자테스트', userName: '변강옥', position: '과장', auth: 10,  programs: ['영업'],                                    lastLogin: '2017-06-14 00:00', phone: null },
+  { userId: 'alstn',     userName: '최민수', position: '차장',   auth: 211, programs: ['영업', '품질', '모바일'],                  lastLogin: '2026-04-03 07:17', phone: '01071111522' },
+  { userId: 'ditl2000',  userName: '이재성', position: '영화대표', auth: 70, programs: ['영업', '모바일'],                         lastLogin: '2026-04-03 10:06', phone: '01082518523' },
+  { userId: 'gary5078',  userName: '문우진', position: null,     auth: 147, programs: ['출하', '영업', '품질', '조합/세무', 'GPS/RT', '모바일'], lastLogin: '2026-04-03 06:34', phone: '01072405078' },
+];
