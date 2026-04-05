@@ -28,11 +28,12 @@
   │   │   └── overrides/    ← 업체별 차이점
   │   ├── shipping/
   │   └── users/
-  ├── components/ui/     ← 공통 부품 (Button, Badge, Table 등)
+  ├── components/ui/     ← 공통 부품 (shadcn/ui)
   ├── hooks/             ← 공통 훅
   ├── config/            ← Feature Flag, 업체별 설정
   └── lib/               ← 유틸리티
   ```
+- shadcn/ui 컴포넌트 활용 + ERP에 맞게 커스터마이징
 - 공통 UI 컴포넌트 제작: Button → Badge → SearchPanel → Modal 순
 - 작업 방식: 하나 만들어서 보여주고 → 같은 패턴으로 직접 만들어보기
 
@@ -60,6 +61,9 @@
 - [x] Vite + React + TypeScript + Tailwind 프로젝트 세팅
 - [x] ResizableTable 컴포넌트 (resize + reorder + localStorage 저장)
 - [x] 샘플 화면 2개 (사용자 목록, 검색어 관리)
+- [x] shadcn/ui 설치 + Button, Dialog 적용
+- [x] 페이지 분리 (pages/ 폴더)
+- [ ] shadcn/ui 컴포넌트 학습 및 추가 적용
 - [ ] **다음: Phase 1 — Delphi 소스 분석 → API 설계**
 - [ ] 폴더 구조 재편 (기능별)
 - [ ] 공통 UI 컴포넌트 제작
@@ -70,7 +74,9 @@
 
 | 파일 | 역할 |
 |------|------|
-| CLAUDE.md | 기술 스택, 빌드 명령어, 코딩 규칙 |
-| PLAN.md | 설계 방향, 아키텍처 고려사항 |
-| ISSUES.md | 리스크, 주의할 이슈 |
-| WORKFLOW.md | 진행 순서, 현재 상태 (이 파일) |
+| CLAUDE.md | 기술 스택, 빌드 명령어, 코딩 규칙 (프로젝트 루트) |
+| docs/PLAN.md | 설계 방향, 아키텍처 고려사항 |
+| docs/ISSUES.md | 리스크, 주의할 이슈 |
+| docs/WORKFLOW.md | 진행 순서, 현재 상태 (이 파일) |
+| docs/PROJECT_STATUS.md | 완료된 작업, 파일 구조 |
+| docs/DOCS_INDEX.md | 문서 안내 |
