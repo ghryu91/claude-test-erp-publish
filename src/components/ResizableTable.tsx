@@ -6,9 +6,10 @@ interface Props {
   initialColumns: ColumnDef[];
   data: Record<string, unknown>[];
   title?: string;
+  onRowClick?: (row: Record<string, unknown>) => void;
 }
 
-export default function ResizableTable({ tableId, initialColumns, data, title }: Props) {
+export default function ResizableTable({ tableId, initialColumns, data, title, onRowClick }: Props) {
   const { columns, startResize, onDragStart, onDragOver, onDrop, resetColumns } =
     useResizableColumns(tableId, initialColumns);
 
@@ -69,7 +70,8 @@ export default function ResizableTable({ tableId, initialColumns, data, title }:
             {data.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
-                className={`hover:bg-blue-50 transition-colors ${rowIndex % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}
+                onClick={() => onRowClick?.(row)}
+                className={`hover:bg-blue-50 transition-colors ${onRowClick ? 'cursor-pointer' : ''} ${rowIndex % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}
               >
                 {columns.map((col) => (
                   <td

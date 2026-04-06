@@ -61,13 +61,20 @@ export function useResizableColumns(tableId: string, initialColumns: ColumnDef[]
       e.preventDefault();
       const startX = e.clientX;
       const startWidth = columns[colIndex].width;
+      const nextIndex = colIndex + 1;
+      const hasNext = nextIndex < columns.length;
+      const nextStartWidth = hasNext ? columns[nextIndex].width : 0;
 
       const onMouseMove = (moveE: MouseEvent) => {
-        const newWidth = Math.max(50, startWidth + moveE.clientX - startX);
+        const diff = moveE.clientX - startX;
+        const newWidth = Math.max(50, startWidth + diff);
+
         setColumns((prev) => {
-          const next = prev.map((c, i) =>
-            i === colIndex ? { ...c, width: newWidth } : c
-          );
+          const next = [...prev];
+          next[colIndex] = { ...next[colIndex], width: newWidth };
+          if (hasNext) {
+            next[nextIndex] = { ...next[nextIndex], width: Math.max(50, nextStartWidth - diff) };
+          }
           persist(tableId, next);
           return next;
         });

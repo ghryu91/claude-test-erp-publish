@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - 파일 작성을 할지는 나에게 물어보고 작업하도록해.
 - 내가 요청할 때 파일을 작성해달라 할 땐 별도로 확인 하지 않고 바로 작성하면 돼.
+- 기능별(함수라던가) component 별로는 무슨 역할을 하는지 기본 명세서는 달아줘.
 
 ## Commands
 
