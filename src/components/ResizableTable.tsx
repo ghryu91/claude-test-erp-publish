@@ -67,25 +67,33 @@ export default function ResizableTable({ tableId, initialColumns, data, title, o
           </thead>
 
           <tbody>
-            {data.map((row, rowIndex) => (
-              <tr
-                key={rowIndex}
-                onClick={() => onRowClick?.(row)}
-                className={`hover:bg-blue-50 transition-colors ${onRowClick ? 'cursor-pointer' : ''} ${rowIndex % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}
-              >
-                {columns.map((col) => (
-                  <td
-                    key={col.key}
-                    style={{ width: col.width }}
-                    className="text-xs text-gray-700 text-center px-3 py-2.5 border-b border-r border-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
-                  >
-                    {col.render
-                      ? col.render(row[col.key], row)
-                      : (row[col.key] as string | number | null) ?? '-'}
-                  </td>
-                ))}
+            {data.length > 0 ? (
+              data.map((row, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  onClick={() => onRowClick?.(row)}
+                  className={`hover:bg-blue-50 transition-colors ${onRowClick ? 'cursor-pointer' : ''} ${rowIndex % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}
+                >
+                  {columns.map((col) => (
+                    <td
+                      key={col.key}
+                      style={{ width: col.width }}
+                      className="text-xs text-gray-700 text-center px-3 py-2.5 border-b border-r border-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
+                    >
+                      {col.render
+                        ? col.render(row[col.key], row)
+                        : (row[col.key] as string | number | null) ?? '-'}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="text-center py-12 text-sm text-gray-400">
+                  자료가 없습니다.
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

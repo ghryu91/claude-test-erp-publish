@@ -14,7 +14,19 @@ export const USER_COLUMNS: ColumnDef[] = [
     ),
   },
   { key: 'userName',  label: '사용자명',    width: 90 },
-  { key: 'password',  label: '비밀번호',    width: 90 },
+  // { key: 'password',  label: '비밀번호',    width: 90 },
+  
+  {
+    key: 'password',
+    label: '비밀번호',
+    width: 140,
+    render: (val) => (
+      <span className="flex items-center gap-1">
+        <span>{String(val)}</span>
+        <CopyButton value={String(val)} />
+      </span>
+    ),
+  },
   { key: 'position',  label: '직책',        width: 80 },
   { key: 'auth',      label: '권한',        width: 70 },
   {

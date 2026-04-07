@@ -1,44 +1,41 @@
-import { useState } from 'react';
+/**
+ * App - 루트 컴포넌트
+ *
+ * react-router-dom으로 페이지 라우팅을 구성한다.
+ * AppLayout이 사이드바 + 콘텐츠 영역을 감싸고,
+ * 각 Route가 콘텐츠 영역에 렌더링된다.
+ */
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AppLayout from '@/components/layout/AppLayout';
 import UserListPage from '@/pages/UserListPage';
 import KeywordPage from '@/pages/KeywordPage';
-
-type TabType = 'user' | 'keyword';
+import CustomerPage from '@/pages/CustomerPage';
+import CustomerRegisterPage from '@/pages/CustomerRegisterPage';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('user');
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      {/* 헤더 */}
-      <header className="bg-[#1a2e4a] text-white h-14 flex items-center px-6 gap-8 shrink-0">
-        <h1 className="text-lg font-bold tracking-widest">ERP SYSTEM</h1>
-        <nav className="flex gap-1">
-          {(['user', 'keyword'] as TabType[]).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-1.5 rounded text-sm transition-colors cursor-pointer ${
-                activeTab === tab
-                  ? 'bg-white/20 text-white font-semibold'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              {tab === 'user' ? '사용자 목록' : '기본 검색어 관리'}
-            </button>
-          ))}
-        </nav>
-      </header>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<UserListPage />} />
+          <Route path="/users" element={<UserListPage />} />
+          <Route path="/keywords" element={<KeywordPage />} />
+          <Route path="/customers" element={<CustomerPage />} />
+          <Route path="/customers/register" element={<CustomerRegisterPage />} />
+          {/* 아직 구현되지 않은 페이지들은 추후 추가 */}
+          <Route path="*" element={<PlaceholderPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
-      {/* 본문 */}
-      <main className="flex-1 p-6 max-w-[1400px] w-full mx-auto">
-        {activeTab === 'user' && <UserListPage />}
-        {activeTab === 'keyword' && <KeywordPage />}
-      </main>
-
-      {/* 푸터 */}
-      <footer className="text-center py-4 text-xs text-gray-400 border-t border-gray-200 bg-white">
-        © 2026 ERP SYSTEM
-      </footer>
+/** 아직 구현되지 않은 페이지용 임시 컴포넌트 */
+function PlaceholderPage() {
+  return (
+    <div className="flex items-center justify-center h-64 text-gray-400 text-sm">
+      준비 중인 페이지입니다.
     </div>
   );
 }
