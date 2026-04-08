@@ -38,12 +38,32 @@ import {
   ClipboardListIcon,
 } from 'lucide-react';
 
+/** 작업 진행 상태 */
+type WorkStatus = 'in-progress' | 'done' | 'todo';
+
 /** 메뉴 항목 타입 정의 */
 interface MenuItem {
   title: string;
   url?: string;
   icon?: React.ComponentType<{ className?: string }>;
-  children?: { title: string; url: string }[];
+  status?: WorkStatus;
+  children?: { title: string; url: string; status?: WorkStatus }[];
+}
+
+/** 상태 뱃지 — [작업중]/[완료]/[미작업] */
+function StatusBadge({ status }: { status?: WorkStatus }) {
+  if (!status) return null;
+  const map: Record<WorkStatus, { label: string; cls: string }> = {
+    'in-progress': { label: '작업중', cls: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+    done: { label: '완료', cls: 'bg-green-100 text-green-700 border-green-200' },
+    todo: { label: '미작업', cls: 'bg-gray-100 text-gray-500 border-gray-200' },
+  };
+  const { label, cls } = map[status];
+  return (
+    <span className={`ml-1 px-1.5 py-0 text-[9px] leading-[14px] rounded border ${cls}`}>
+      {label}
+    </span>
+  );
 }
 
 /** 메뉴 그룹 타입 정의 */
@@ -61,19 +81,21 @@ const MENU_GROUPS: MenuGroup[] = [
         title: '대시보드',
         url: '/',
         icon: LayoutDashboardIcon,
+        status: 'todo',
       },
       {
         title: '사용자 관리',
         icon: UsersIcon,
         children: [
-          { title: '사용자 목록', url: '/users' },
-          { title: '권한 관리', url: '/users/permissions' },
+          { title: '사용자 목록', url: '/users', status: 'done' },
+          { title: '권한 관리', url: '/users/permissions', status: 'todo' },
         ],
       },
       {
-        title: '기본 검색어',
+        title: '기본 검색어(테스트 페이지)',
         url: '/keywords',
         icon: SearchIcon,
+        status: 'todo',
       },
     ],
   },
@@ -84,17 +106,17 @@ const MENU_GROUPS: MenuGroup[] = [
         title: '거래처 관리',
         icon: BuildingIcon,
         children: [
-          { title: '거래처 목록', url: '/customers' },
-          { title: '거래처 등록', url: '/customers/register' },
-          { title: '계열사 관리', url: '/customers/affiliates' },
+          { title: '거래처 목록(테스트)', url: '/customers', status: 'in-progress' },
+          { title: '거래처 목록2', url: '/customers/register', status: 'in-progress' },
+          { title: '계열사 관리', url: '/customers/affiliates', status: 'todo' },
         ],
       },
       {
         title: '수주 관리',
         icon: ClipboardListIcon,
         children: [
-          { title: '수주 등록', url: '/orders/new' },
-          { title: '수주 현황', url: '/orders' },
+          { title: '수주 등록', url: '/orders/new', status: 'todo' },
+          { title: '수주 현황', url: '/orders', status: 'todo' },
         ],
       },
     ],
@@ -106,16 +128,16 @@ const MENU_GROUPS: MenuGroup[] = [
         title: '배차 관리',
         icon: TruckIcon,
         children: [
-          { title: '배차 등록', url: '/dispatch/new' },
-          { title: '배차 현황', url: '/dispatch' },
+          { title: '배차 등록', url: '/dispatch/new', status: 'todo' },
+          { title: '배차 현황', url: '/dispatch', status: 'todo' },
         ],
       },
       {
         title: '출하 관리',
         icon: PackageIcon,
         children: [
-          { title: '출하 등록', url: '/shipment/new' },
-          { title: '출하 현황', url: '/shipment' },
+          { title: '출하 등록', url: '/shipment/new', status: 'todo' },
+          { title: '출하 현황', url: '/shipment', status: 'todo' },
         ],
       },
     ],
@@ -127,6 +149,13 @@ const MENU_GROUPS: MenuGroup[] = [
         title: '설정',
         url: '/settings',
         icon: SettingsIcon,
+        status: 'todo',
+      },
+      {
+        title: '원격 DB 쿼리',
+        url: '/dev/remote-db',
+        icon: SettingsIcon,
+        status: 'in-progress',
       },
     ],
   },
@@ -177,6 +206,7 @@ export default function AppSidebar() {
                         >
                           {item.icon && <item.icon className="size-4" />}
                           <span>{item.title}</span>
+                          <StatusBadge status={item.status} />
                           <ChevronRightIcon className="ml-auto size-4 transition-transform duration-200 group-data-[panel-open]/trigger:rotate-90" />
                         </CollapsibleTrigger>
 
@@ -189,6 +219,7 @@ export default function AppSidebar() {
                                   isActive={isActive(child.url)}
                                 >
                                   {child.title}
+                                  <StatusBadge status={child.status} />
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ))}
@@ -205,6 +236,7 @@ export default function AppSidebar() {
                       >
                         {item.icon && <item.icon className="size-4" />}
                         <span>{item.title}</span>
+                        <StatusBadge status={item.status} />
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )

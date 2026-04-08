@@ -12,6 +12,7 @@ import UserListPage from '@/pages/UserListPage';
 import KeywordPage from '@/pages/KeywordPage';
 import CustomerPage from '@/pages/CustomerPage';
 import CustomerRegisterPage from '@/pages/CustomerRegisterPage';
+import RemoteDbQueryPage from '@/pages/RemoteDbQueryPage';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/keywords" element={<KeywordPage />} />
           <Route path="/customers" element={<CustomerPage />} />
           <Route path="/customers/register" element={<CustomerRegisterPage />} />
+          <Route path="/dev/remote-db" element={<RemoteDbQueryPage />} />
           {/* 아직 구현되지 않은 페이지들은 추후 추가 */}
           <Route path="*" element={<PlaceholderPage />} />
         </Route>

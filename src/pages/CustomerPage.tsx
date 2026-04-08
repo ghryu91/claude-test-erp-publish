@@ -11,6 +11,7 @@ import { useState } from 'react';
 import ResizableTable from '@/components/ResizableTable';
 import { Button } from '@/components/ui/button';
 import { CUSTOMER_COLUMNS, CUSTOMER_DATA, type Customer } from '@/data/customerData';
+import { getCustomerTypeLabel } from '@/config/customerType';
 import {
   PlusIcon,
   CheckIcon,
@@ -24,7 +25,7 @@ import {
 /** 빈 거래처 객체 생성 — 신규 추가 시 초기값 */
 const emptyCustomer = (): Customer => ({
   cust_code: '',
-  sangho: '',
+  company_short_name: '',
   company_name: '',
   business_no: '',
   representative: '',
@@ -35,7 +36,7 @@ const emptyCustomer = (): Customer => ({
   zip_code: '',
   business_type: '',
   business_item: '',
-  cust_gubun: '레미콘회사',
+  customer_type: 2,
   remark_1: '',
   remark_2: '',
 });
@@ -142,11 +143,11 @@ export default function CustomerPage() {
           {/* 좌측 폼 영역 */}
           <div className="flex-1 grid grid-cols-2 gap-2">
             <Field label="코 드" value={selected.cust_code} onChange={(v) => updateField('cust_code', v)} />
-            <Field label="거래구분" value={selected.cust_gubun} onChange={(v) => updateField('cust_gubun', v)} />
+            <Field label="거래구분" value={getCustomerTypeLabel(selected.customer_type)} readOnly />
             <Field label="사업자번호" value={selected.business_no} onChange={(v) => updateField('business_no', v)} />
             <Field label="종사업장" value="" readOnly />
             <Field label="상 호" value={selected.company_name} onChange={(v) => updateField('company_name', v)} />
-            <Field label="상호(약어)" value={selected.sangho} onChange={(v) => updateField('sangho', v)} />
+            <Field label="상호(약어)" value={selected.company_short_name} onChange={(v) => updateField('company_short_name', v)} />
             <Field label="대표자" value={selected.representative} onChange={(v) => updateField('representative', v)} />
             <Field label="주민번호" value="" readOnly />
             <Field label="우편번호" value={selected.zip_code} onChange={(v) => updateField('zip_code', v)} />

@@ -8,7 +8,7 @@ import type { ColumnDef } from '../hooks/useResizableColumns';
 
 export interface Customer {
   cust_code: string;
-  sangho: string;       // 상호(약어)
+  company_short_name: string;       // 상호(약어)
   company_name: string; // 상호 (정식)
   business_no: string;  // 사업자번호
   representative: string; // 대표자
@@ -19,7 +19,7 @@ export interface Customer {
   zip_code: string;     // 우편번호
   business_type: string; // 업태
   business_item: string; // 종목
-  cust_gubun: string;   // 거래구분 (예: 레미콘회사)
+  customer_type: number; // 거래구분 코드 (config/customerType 참조)
   remark_1: string;     // 비고(1)
   remark_2: string;     // 비고(2)
 }
@@ -27,7 +27,7 @@ export interface Customer {
 /** 거래처 목록 테이블 컬럼 정의 */
 export const CUSTOMER_COLUMNS: ColumnDef[] = [
   { key: 'cust_code', label: '코드', width: 80 },
-  { key: 'sangho', label: '상호(약어)', width: 140 },
+  { key: 'company_short_name', label: '상호', width: 140 },
   { key: 'business_no', label: '사업자번호', width: 120 },
   { key: 'address', label: '사업장주소', width: 280 },
   { key: 'tel_1', label: '전화(1)', width: 120 },
@@ -38,7 +38,7 @@ export const CUSTOMER_COLUMNS: ColumnDef[] = [
 export const CUSTOMER_DATA: Customer[] = [
   {
     cust_code: 'RM_544',
-    sangho: '달성레미콘',
+    company_short_name: '달성레미콘',
     company_name: '달성레미콘(주)',
     business_no: '513-81-07094',
     representative: '김대표',
@@ -49,13 +49,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '010-3826-6016 손이사님',
     remark_2: '',
   },
   {
     cust_code: 'RM_545',
-    sangho: '김천레미콘',
+    company_short_name: '김천레미콘',
     company_name: '김천레미콘(주)',
     business_no: '510-81-01922',
     representative: '이대표',
@@ -66,13 +66,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '',
     remark_2: '',
   },
   {
     cust_code: 'RM_546',
-    sangho: '세일레미콘',
+    company_short_name: '세일레미콘',
     company_name: '세일레미콘(주)',
     business_no: '510-81-05893',
     representative: '박대표',
@@ -83,13 +83,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '영업부 : 054)436-8956',
     remark_2: '',
   },
   {
     cust_code: 'RM_547',
-    sangho: '황악콘크리트',
+    company_short_name: '황악콘크리트',
     company_name: '황악콘크리트(주)',
     business_no: '510-81-01408',
     representative: '최대표',
@@ -100,13 +100,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '',
     remark_2: '',
   },
   {
     cust_code: 'RM_548',
-    sangho: '영남(김천*)',
+    company_short_name: '영남(김천*)',
     company_name: '영남레미콘(주)',
     business_no: '510-81-07682',
     representative: '정대표',
@@ -117,13 +117,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '개인사업자로변경 502로',
     remark_2: '',
   },
   {
     cust_code: 'RM_549',
-    sangho: '대종레미콘',
+    company_short_name: '대종레미콘',
     company_name: '대종레미콘(주)',
     business_no: '505-81-30556',
     representative: '한대표',
@@ -134,13 +134,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '',
     remark_2: '',
   },
   {
     cust_code: 'RM_550',
-    sangho: '신우레미콘(주)',
+    company_short_name: '신우레미콘(주)',
     company_name: '신우레미콘(주)',
     business_no: '505-81-26635',
     representative: '양승운',
@@ -151,13 +151,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '780-827',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '동명산업에서 07년01월05일 업체명 변경 신우레미콘(주)',
     remark_2: '출하실:054-775-9155',
   },
   {
     cust_code: 'RM_551',
-    sangho: '케이엠레미콘',
+    company_short_name: '케이엠레미콘',
     company_name: '케이엠레미콘(주)',
     business_no: '506-81-30243',
     representative: '김대표',
@@ -168,13 +168,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '관제, 조합프로그램만사용',
     remark_2: '',
   },
   {
     cust_code: 'RM_552',
-    sangho: '동해레미콘',
+    company_short_name: '동해레미콘',
     company_name: '동해레미콘(주)',
     business_no: '506-81-07494',
     representative: '이대표',
@@ -185,13 +185,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '공장팩스:054-232-8666',
     remark_2: '',
   },
   {
     cust_code: 'RM_553',
-    sangho: '동원레미콘',
+    company_short_name: '동원레미콘',
     company_name: '동원레미콘(주)',
     business_no: '506-81-33497',
     representative: '박대표',
@@ -202,13 +202,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '',
     remark_2: '',
   },
   {
     cust_code: 'RM_554',
-    sangho: '영남레미콘(포항)',
+    company_short_name: '영남레미콘(포항)',
     company_name: '영남레미콘(포항)(주)',
     business_no: '506-81-07553',
     representative: '최대표',
@@ -219,13 +219,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '',
     remark_2: '',
   },
   {
     cust_code: 'RM_555',
-    sangho: '영진레미콘',
+    company_short_name: '영진레미콘',
     company_name: '영진레미콘(주)',
     business_no: '506-81-27812',
     representative: '정대표',
@@ -236,13 +236,13 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '',
     remark_2: '',
   },
   {
     cust_code: 'RM_556',
-    sangho: '세운레미콘',
+    company_short_name: '세운레미콘',
     company_name: '세운레미콘(주)',
     business_no: '506-85-16384',
     representative: '한대표',
@@ -253,7 +253,7 @@ export const CUSTOMER_DATA: Customer[] = [
     zip_code: '',
     business_type: '제조',
     business_item: '레미콘',
-    cust_gubun: '레미콘회사',
+    customer_type: 2,
     remark_1: '유니온레미콘->세운레미',
     remark_2: '',
   },

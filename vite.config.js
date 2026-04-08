@@ -14,6 +14,9 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
+        
+        // target: 'http://135.1.1.XXX:8000',  // 백엔드 PC I
+        // target: 'http://192.168.x.x:8000',
         changeOrigin: true,
       },
     },

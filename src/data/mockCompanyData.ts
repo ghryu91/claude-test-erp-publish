@@ -296,15 +296,15 @@ export const MOCK_MASTER_DATA = {
 // Mock 데이터: /api/v1/affiliates/RM_55C 응답
 export const MOCK_AFFILIATES_DATA = {
   affiliates: [
-    { cust_code: "RM_550", sangho: "신우레미콘(주)", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_55A", sangho: "신우레미콘(주)", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_55B", sangho: "영화레미콘(주)", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_55C", sangho: "흥진레미콘주식회사", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_55D", sangho: "영진레미콘아스콘(주)", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_5K3", sangho: "신우레미콘아스콘(주)", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_5K4", sangho: "우진레미콘아스콘(주)", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_5P2", sangho: "신우레미콘1공장", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_5P5", sangho: "신우레미콘산업주식회사", group_cust: "RM_550", program_cust: null },
-    { cust_code: "RM_907", sangho: "신아레미콘(주)", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_550", company_short_name: "신우레미콘(주)", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_55A", company_short_name: "신우레미콘(주)", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_55B", company_short_name: "영화레미콘(주)", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_55C", company_short_name: "흥진레미콘주식회사", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_55D", company_short_name: "영진레미콘아스콘(주)", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_5K3", company_short_name: "신우레미콘아스콘(주)", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_5K4", company_short_name: "우진레미콘아스콘(주)", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_5P2", company_short_name: "신우레미콘1공장", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_5P5", company_short_name: "신우레미콘산업주식회사", group_cust: "RM_550", program_cust: null },
+    { cust_code: "RM_907", company_short_name: "신아레미콘(주)", group_cust: "RM_550", program_cust: null },
   ],
 };

@@ -18,7 +18,7 @@ import { BuildingIcon, ChevronDownIcon } from 'lucide-react';
 
 export interface Affiliate {
   cust_code: string;
-  sangho: string;
+  company_name: string;
   group_cust: string;
 }
 
@@ -61,7 +61,7 @@ export default function AffiliateSelector({ affiliates, currentCode, onSelect }:
                   : 'text-gray-700'
               }`}
             >
-              <span>{a.sangho}</span>
+              <span>{a.company_name}</span>
               <span className="text-xs text-gray-400">{a.cust_code.trim()}</span>
             </button>
           ))}
