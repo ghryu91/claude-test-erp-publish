@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ResizableTable from '@/components/ResizableTable';
 import { USER_COLUMNS, mapApiUserToRow, type UserRow } from '@/data/userListData';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import {
   Dialog,
   DialogTrigger,
@@ -72,7 +73,7 @@ export default function UserListPage() {
   const [company, setCompany] = useState<CompanyInfo | null>(null);
   const [selectedUser, setSelectedUser] = useState<ApiUser | null>(null);
   const [apiUsers, setApiUsers] = useState<ApiUser[]>([]);
-  const [searchCode, setSearchCode] = useState('RM_55C');
+  const [searchCode, setSearchCode] = useState('');
   const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
 
   /** API/Mock 응답 데이터를 상태에 반영 */
@@ -204,7 +205,10 @@ export default function UserListPage() {
             currentCode={searchCode}
             onSelect={handleSelectAffiliate}
           />
-          <Button onClick={() => fetchAll(searchCode)}>조회</Button>
+          <Button onClick={() => fetchAll(searchCode)} disabled={loading}>
+            {loading && <Spinner className="size-4" />}
+            {loading ? '조회 중...' : '조회'}
+          </Button>
         </div>
 
         {search && (
@@ -213,12 +217,38 @@ export default function UserListPage() {
         <span className="text-sm text-gray-500">총 {filteredUsers.length}명</span>
       </div>
 
-      {loading && <div className="text-sm text-gray-500 mb-4">로딩 중...</div>}
+      {loading && (
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+          <Spinner className="size-3" />
+          <span>로딩 중...</span>
+        </div>
+      )}
       {error && <div className="text-sm text-red-500 mb-4">에러: {error}</div>}
 
       {/* 회사 정보 카드 */}
       <div className="border-t-4 border-blue-500 rounded-lg bg-white shadow-sm mb-4 p-4">
-        {company ? (
+        {loading ? (
+          // 로딩 중 — 헤더 + 정보 그리드 스켈레톤
+          <>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-6 w-20 bg-gray-200 rounded animate-pulse" />
+              <div className="h-5 w-5 bg-gray-200 rounded animate-pulse" />
+              <div className="h-6 w-48 bg-gray-200 rounded animate-pulse" />
+            </div>
+            <div className="grid grid-cols-2 border border-gray-200 rounded-md overflow-hidden text-sm">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={i} className={`flex ${i < 8 ? 'border-b border-gray-200' : ''} ${i % 2 === 0 ? 'border-r border-gray-200' : ''}`}>
+                  <div className="w-[90px] min-w-[90px] bg-gray-50 px-2.5 py-1.5 border-r border-gray-200">
+                    <div className="h-3 bg-gray-200 rounded animate-pulse" />
+                  </div>
+                  <div className="px-3 py-1.5 flex-1">
+                    <div className="h-3 bg-gray-200 rounded animate-pulse" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : company ? (
           <>
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-3">
@@ -271,6 +301,7 @@ export default function UserListPage() {
             data={toRecord(filteredUsers)}
             title={`사용자 목록 (${filteredUsers.length}명)`}
             onRowClick={handleRowClick}
+            loading={loading}
           />
         </div>
 
@@ -278,7 +309,30 @@ export default function UserListPage() {
         <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 h-[500px] overflow-y-auto">
           <h3 className="font-bold text-sm text-gray-900 mb-3">접속 프로그램 상세</h3>
 
-          {selectedUser ? (
+          {loading ? (
+            // 로딩 중 — 선택 유저 헤더 + 프로그램 카드 스켈레톤
+            <>
+              <div className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-3 mb-3">
+                <div className="w-9 h-9 rounded-full bg-gray-200 animate-pulse shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 w-20 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-3 w-32 bg-gray-200 rounded animate-pulse" />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-5 w-12 bg-gray-200 rounded-full animate-pulse" />
+                ))}
+              </div>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-white border border-gray-200 border-l-[3px] border-l-gray-300 rounded-md p-2.5 mb-2 space-y-2">
+                  <div className="h-3 w-2/3 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-3 w-full bg-gray-200 rounded animate-pulse" />
+                  <div className="h-3 w-5/6 bg-gray-200 rounded animate-pulse" />
+                </div>
+              ))}
+            </>
+          ) : selectedUser ? (
             <>
               {/* 선택 유저 헤더 */}
               <div className="flex items-center gap-3 bg-white rounded-lg border border-blue-200 p-3 mb-3">

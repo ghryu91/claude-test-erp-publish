@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function RemoteDbQueryPage() {
   const [query, setQuery] = useState('SELECT TOP 10 * FROM INFORMATION_SCHEMA.TABLES');
@@ -96,6 +97,7 @@ export default function RemoteDbQueryPage() {
 
         <div className="flex items-center gap-2">
           <Button onClick={runQuery} disabled={loading} className="bg-gray-800 hover:bg-gray-900">
+            {loading && <Spinner className="size-4" />}
             {loading ? '실행 중...' : '쿼리 실행'}
           </Button>
           {error && <span className="text-xs text-red-600">에러: {error}</span>}

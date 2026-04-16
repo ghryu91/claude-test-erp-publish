@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Continue.dev (AI assistant personal settings)
+.continue/

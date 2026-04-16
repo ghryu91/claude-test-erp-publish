@@ -12,6 +12,7 @@
 import { useEffect, useState } from 'react';
 import ResizableTable from '@/components/ResizableTable';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import {
   Dialog,
   DialogContent,
@@ -279,17 +280,22 @@ export default function CustomerRegisterPage() {
 
         {/* 검색 버튼 영역 */}
         <div className="flex justify-center gap-2 mt-4 pt-3 border-t border-gray-100">
-          <Button variant="outline" onClick={handleResetFilter}>
+          <Button variant="outline" onClick={handleResetFilter} disabled={loading}>
             초기화
           </Button>
-          <Button onClick={fetchCustomers} className="bg-gray-800 hover:bg-gray-900">
-            <SearchIcon className="size-4" />
-            검색
+          <Button onClick={fetchCustomers} disabled={loading} className="bg-gray-800 hover:bg-gray-900">
+            {loading ? <Spinner className="size-4" /> : <SearchIcon className="size-4" />}
+            {loading ? '검색 중...' : '검색'}
           </Button>
         </div>
       </div>
 
-      {loading && <div className="text-sm text-gray-500 mb-2">로딩 중...</div>}
+      {loading && (
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+          <Spinner className="size-3" />
+          <span>로딩 중...</span>
+        </div>
+      )}
       {error && <div className="text-sm text-red-500 mb-2">에러: {error}</div>}
 
       <div className="text-sm text-gray-500 mb-2">총 {customers.length}개</div>
@@ -563,6 +569,7 @@ export default function CustomerRegisterPage() {
         data={toRecord(customers)}
         title={`거래처 목록 (${customers.length}개)`}
         onRowClick={handleRowClick}
+        loading={loading}
       />
 
       {/* 편집 Dialog */}

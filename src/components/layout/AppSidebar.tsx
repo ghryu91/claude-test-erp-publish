@@ -36,7 +36,9 @@ import {
   TruckIcon,
   PackageIcon,
   ClipboardListIcon,
+  LogOutIcon,
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 /** 작업 진행 상태 */
 type WorkStatus = 'in-progress' | 'done' | 'todo';
@@ -88,7 +90,9 @@ const MENU_GROUPS: MenuGroup[] = [
         icon: UsersIcon,
         children: [
           { title: '사용자 목록', url: '/users', status: 'done' },
+          { title: '사용자 검색', url: '/users/search', status: 'in-progress' },
           { title: '권한 관리', url: '/users/permissions', status: 'todo' },
+          { title: '로그인(템플릿)', url: '/templates/sign-in', status: 'in-progress' },
         ],
       },
       {
@@ -163,6 +167,7 @@ const MENU_GROUPS: MenuGroup[] = [
 
 export default function AppSidebar() {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   /** 현재 경로가 주어진 URL과 일치하는지 확인 */
   const isActive = (url: string) => location.pathname === url;
@@ -247,8 +252,23 @@ export default function AppSidebar() {
         ))}
       </SidebarContent>
 
-      {/* 사이드바 하단 */}
+      {/* 사이드바 하단 — 사용자 정보 + 로그아웃 */}
       <SidebarFooter className="border-t border-sidebar-border px-4 py-3">
+        {user && (
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-xs">
+              <div className="font-semibold text-gray-900">{user.user_name}</div>
+              <div className="text-muted-foreground">{user.company_name}</div>
+            </div>
+            <button
+              onClick={logout}
+              className="p-1.5 rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+              title="로그아웃"
+            >
+              <LogOutIcon className="size-4" />
+            </button>
+          </div>
+        )}
         <div className="text-[11px] text-muted-foreground">
           © 2026 ERP SYSTEM
         </div>

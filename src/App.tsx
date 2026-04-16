@@ -7,28 +7,43 @@
  */
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from '@/contexts/AuthContext';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import AppLayout from '@/components/layout/AppLayout';
 import UserListPage from '@/pages/UserListPage';
 import KeywordPage from '@/pages/KeywordPage';
 import CustomerPage from '@/pages/CustomerPage';
 import CustomerRegisterPage from '@/pages/CustomerRegisterPage';
 import RemoteDbQueryPage from '@/pages/RemoteDbQueryPage';
+import UserSearchPage from '@/pages/UserSearchPage';
+import SignInPage from '@/pages/SignInPage';
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<UserListPage />} />
-          <Route path="/users" element={<UserListPage />} />
-          <Route path="/keywords" element={<KeywordPage />} />
-          <Route path="/customers" element={<CustomerPage />} />
-          <Route path="/customers/register" element={<CustomerRegisterPage />} />
-          <Route path="/dev/remote-db" element={<RemoteDbQueryPage />} />
-          {/* 아직 구현되지 않은 페이지들은 추후 추가 */}
-          <Route path="*" element={<PlaceholderPage />} />
-        </Route>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          {/* 공개 라우트 — 로그인 */}
+          <Route path="/auth/sign-in" element={<SignInPage />} />
+
+          {/* 인증 필요 라우트 */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<UserListPage />} />
+              <Route path="/users" element={<UserListPage />} />
+              <Route path="/users/search" element={<UserSearchPage />} />
+              <Route path="/keywords" element={<KeywordPage />} />
+              <Route path="/customers" element={<CustomerPage />} />
+              <Route path="/customers/register" element={<CustomerRegisterPage />} />
+              <Route path="/dev/remote-db" element={<RemoteDbQueryPage />} />
+              {/* 템플릿 프리뷰용 — 사이드바에서 로그인 화면 UI만 확인 */}
+              <Route path="/templates/sign-in" element={<SignInPage />} />
+              {/* 아직 구현되지 않은 페이지들은 추후 추가 */}
+              <Route path="*" element={<PlaceholderPage />} />
+            </Route>
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

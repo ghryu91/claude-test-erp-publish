@@ -7,9 +7,17 @@ interface Props {
   data: Record<string, unknown>[];
   title?: string;
   onRowClick?: (row: Record<string, unknown>) => void;
+  /** 로딩 중일 때 스켈레톤 행 표시 (CLAUDE.md UI/UX Principles) */
+  loading?: boolean;
+  /** 스켈레톤 행 개수 (기본 8) */
+  skeletonRows?: number;
+  /** 엑셀 다운로드 핸들러 — 전달 시 데이터가 있을 때만 툴바에 버튼 노출 */
+  onExcelDownload?: () => void;
+  /** 엑셀 다운로드 진행 중 여부 — 버튼 disabled/스피너 제어 */
+  exporting?: boolean;
 }
 
-export default function ResizableTable({ tableId, initialColumns, data, title, onRowClick }: Props) {
+export default function ResizableTable({ tableId, initialColumns, data, title, onRowClick, loading = false, skeletonRows = 8, onExcelDownload, exporting = false }: Props) {
   const { columns, startResize, onDragStart, onDragOver, onDrop, resetColumns } =
     useResizableColumns(tableId, initialColumns);
 
@@ -20,12 +28,24 @@ export default function ResizableTable({ tableId, initialColumns, data, title, o
       {/* 툴바 */}
       <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
         {title && <span className="font-bold text-sm text-gray-800">{title}</span>}
-        <button
-          onClick={resetColumns}
-          className="text-xs px-2.5 py-1 border border-gray-400 rounded bg-white text-gray-500 hover:bg-gray-100 cursor-pointer transition-colors"
-        >
-          컬럼 초기화
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={resetColumns}
+            className="text-xs px-2.5 py-1 border border-gray-400 rounded bg-white text-gray-500 hover:bg-gray-100 cursor-pointer transition-colors"
+          >
+            컬럼 초기화
+          </button>
+          {/* 엑셀 다운로드 — 핸들러가 있고 데이터가 있을 때만 노출 */}
+          {onExcelDownload && data.length > 0 && (
+            <button
+              onClick={onExcelDownload}
+              disabled={exporting}
+              className="text-xs px-2.5 py-1 border border-green-600 rounded bg-white text-green-700 hover:bg-green-50 cursor-pointer transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {exporting ? '다운로드 중...' : '📊 엑셀 다운로드'}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 테이블 */}
@@ -67,7 +87,22 @@ export default function ResizableTable({ tableId, initialColumns, data, title, o
           </thead>
 
           <tbody>
-            {data.length > 0 ? (
+            {loading ? (
+              // 로딩 중 — 스켈레톤 행 (CLAUDE.md UI/UX Principles)
+              Array.from({ length: skeletonRows }).map((_, rowIndex) => (
+                <tr key={`skeleton-${rowIndex}`} className={rowIndex % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                  {columns.map((col) => (
+                    <td
+                      key={col.key}
+                      style={{ width: col.width }}
+                      className="text-xs px-3 py-2.5 border-b border-r border-gray-200"
+                    >
+                      <div className="h-3 bg-gray-200 rounded animate-pulse" />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : data.length > 0 ? (
               data.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
