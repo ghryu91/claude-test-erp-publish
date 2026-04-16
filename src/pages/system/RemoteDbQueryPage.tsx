@@ -10,6 +10,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import api from '@/api/axiosInstance';
 
 export default function RemoteDbQueryPage() {
   const [query, setQuery] = useState('SELECT TOP 10 * FROM INFORMATION_SCHEMA.TABLES');
@@ -25,17 +26,11 @@ export default function RemoteDbQueryPage() {
     setError(null);
     setResult(null);
     try {
-      const res = await fetch('/api/v1/remote-db/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, server, database }),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-      const data = await res.json();
-      setResult(data);
-      console.log(data);
-    } catch (err) {
-      setError((err as Error).message);
+      const response = await api.post('/remote-db/query', { query, server, database });
+      setResult(response.data);
+      console.log(response.data);
+    } catch (error) {
+      setError((error as Error).message);
     } finally {
       setLoading(false);
     }

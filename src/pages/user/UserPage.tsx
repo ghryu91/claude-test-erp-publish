@@ -16,9 +16,7 @@ import AffiliateSelector, { type Affiliate } from '@/components/AffiliateSelecto
 import { CopyButton } from '@/components/ui/copy-button';
 import { SearchIcon, DatabaseIcon, HardDriveIcon } from 'lucide-react';
 import { MOCK_MASTER_DATA, MOCK_AFFILIATES_DATA } from '@/data/mockCompanyData';
-
-const API_BASE = '/api/v1/master';
-const AFFILIATES_API = '/api/v1/affiliates';
+import api from '@/api/axiosInstance';
 
 /** Record<string, unknown>[] 변환 헬퍼 — ResizableTable에 데이터 전달용 */
 function toRecord<T extends object>(arr: T[]): Record<string, unknown>[] {
@@ -58,12 +56,12 @@ interface ApiUser {
 }
 
 /**
- * UserListPage - 사용자 목록 화면
+ * UserPage - 사용자 목록 화면
  *
  * 거래처 코드로 조회하면 회사 정보 + 사용자 목록 + 프로그램 상세를 표시한다.
  * Mock/API 모드 전환 가능. 조회 시 계열사 목록도 함께 로딩된다.
  */
-export default function UserListPage() {
+export default function UserPage() {
   const [search, setSearch] = useState('');
   const [dialogSearch, setDialogSearch] = useState('');
   const [useApi, setUseApi] = useState(true);
@@ -91,24 +89,22 @@ export default function UserListPage() {
     setError(null);
     try {
       if (useApi) {
-        const [masterRes, affRes] = await Promise.all([
-          fetch(`${API_BASE}/${code.trim()}`),
-          fetch(`${AFFILIATES_API}/${code.trim()}`),
+        const trimmed = code.trim();
+        const [masterResponse, affiliatesResponse] = await Promise.all([
+          api.get(`/master/${trimmed}`),
+          api.get(`/affiliates/${trimmed}`).catch(() => null),
         ]);
-        if (!masterRes.ok) throw new Error(`HTTP ${masterRes.status}`);
-        const masterJson = await masterRes.json();
-        loadData(masterJson);
+        loadData(masterResponse.data);
 
-        if (affRes.ok) {
-          const affJson = await affRes.json();
-          setAffiliates(affJson.affiliates);
+        if (affiliatesResponse?.data) {
+          setAffiliates(affiliatesResponse.data.affiliates);
         }
       } else {
         loadData(MOCK_MASTER_DATA as { company: CompanyInfo; users: ApiUser[] });
         // setAffiliates(MOCK_AFFILIATES_DATA.affiliates);
       }
-    } catch (err) {
-      setError((err as Error).message);
+    } catch (error) {
+      setError((error as Error).message);
       setCompany(null);
       setApiUsers([]);
       setSelectedUser(null);
@@ -350,25 +346,25 @@ export default function UserListPage() {
 
               {/* 프로그램 뱃지 */}
               <div className="flex flex-wrap gap-1.5 mb-3">
-                {selectedUser.programs.map((pgm, i) => (
-                  <span key={i} className="bg-emerald-50 text-emerald-600 border border-emerald-400 px-2.5 py-0.5 rounded-full text-xs font-bold">
-                    {pgm.program_label}
+                {selectedUser.programs.map((program, index) => (
+                  <span key={index} className="bg-emerald-50 text-emerald-600 border border-emerald-400 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                    {program.program_label}
                   </span>
                 ))}
               </div>
 
               {/* 프로그램 상세 카드 */}
-              {selectedUser.programs.map((pgm, i) => (
-                <div key={i} className="bg-white border border-emerald-200 border-l-[3px] border-l-emerald-500 rounded-md p-2.5 mb-2 text-xs">
+              {selectedUser.programs.map((program, index) => (
+                <div key={index} className="bg-white border border-emerald-200 border-l-[3px] border-l-emerald-500 rounded-md p-2.5 mb-2 text-xs">
                   <div className="font-bold text-emerald-800 mb-1.5">
                     <span className="bg-emerald-100 px-1.5 py-0.5 rounded text-[11px] mr-1.5">
-                      {pgm.program_label}
+                      {program.program_label}
                     </span>
-                    {pgm.program_name || '기본 프로그램'}
+                    {program.program_name || '기본 프로그램'}
                   </div>
                   <div className="text-gray-500 leading-relaxed">
-                    <div><span className="inline-block w-[50px] text-gray-400">서버</span>{pgm.program_path || '-'}</div>
-                    <div><span className="inline-block w-[50px] text-gray-400">로컬</span>{pgm.user_program_path || '-'}</div>
+                    <div><span className="inline-block w-[50px] text-gray-400">서버</span>{program.program_path || '-'}</div>
+                    <div><span className="inline-block w-[50px] text-gray-400">로컬</span>{program.user_program_path || '-'}</div>
                   </div>
                 </div>
               ))}

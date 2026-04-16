@@ -12,6 +12,11 @@ import { Spinner } from '@/components/ui/spinner';
 export default function ProtectedRoute() {
   const { user, initializing } = useAuth();
 
+  // 개발용 인증 바이패스 — .env.local에 VITE_SKIP_AUTH=true 설정 시 동작 (개발모드 한정)
+  if (import.meta.env.DEV && import.meta.env.VITE_SKIP_AUTH === 'true') {
+    return <Outlet />;
+  }
+  
   if (initializing) {
     return (
       <div className="min-h-screen flex items-center justify-center">

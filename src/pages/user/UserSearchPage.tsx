@@ -120,10 +120,10 @@ export default function UserSearchPage() {
 
       setUsers(items);
       setSearched(true);
-    } catch (err: unknown) {
-      console.error('[UserSearchPage] 검색 실패:', err);
-      const axiosErr = err as { response?: { data?: { detail?: string } }; message?: string };
-      setError(axiosErr.response?.data?.detail || axiosErr.message || '검색 실패');
+    } catch (error: unknown) {
+      console.error('[UserSearchPage] 검색 실패:', error);
+      const axiosError = error as { response?: { data?: { detail?: string } }; message?: string };
+      setError(axiosError.response?.data?.detail || axiosError.message || '검색 실패');
     } finally {
       setLoading(false);
     }
@@ -178,10 +178,10 @@ export default function UserSearchPage() {
 
       const filename = `users_${new Date().toISOString().slice(0, 10)}.xlsx`;
       XLSX.writeFile(wb, filename);
-    } catch (err: unknown) {
-      console.error('[UserSearchPage] 엑셀 다운로드 실패:', err);
-      const axiosErr = err as { response?: { data?: { detail?: string } }; message?: string };
-      setError(axiosErr.response?.data?.detail || axiosErr.message || '엑셀 다운로드 실패');
+    } catch (error: unknown) {
+      console.error('[UserSearchPage] 엑셀 다운로드 실패:', error);
+      const axiosError = error as { response?: { data?: { detail?: string } }; message?: string };
+      setError(axiosError.response?.data?.detail || axiosError.message || '엑셀 다운로드 실패');
     } finally {
       setExporting(false);
     }

@@ -21,7 +21,7 @@ interface AuthContextValue {
   /** 초기 토큰 검증 중 여부 */
   initializing: boolean;
   /** 로그인 처리 */
-  login: (req: LoginRequest) => Promise<void>;
+  login: (request: LoginRequest) => Promise<void>;
   /** 로그아웃 처리 */
   logout: () => void;
 }
@@ -52,15 +52,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /** 로그인 — API 호출 + 상태 갱신 + 메인 페이지 이동 */
   const handleLogin = useCallback(
-    async (req: LoginRequest) => {
-      const res = await apiLogin(req);
+    async (request: LoginRequest) => {
+      const response = await apiLogin(request);
       setUser({
-        user_id: res.user_id,
-        login_id: res.login_id,
-        user_name: res.user_name,
-        company_id: res.company_id,
-        company_name: res.company_name,
-        authority_group_id: res.authority_group_id,
+        user_id: response.user_id,
+        login_id: response.login_id,
+        user_name: response.user_name,
+        company_id: response.company_id,
+        company_name: response.company_name,
+        authority_group_id: response.authority_group_id,
       });
       navigate('/', { replace: true });
     },
@@ -90,7 +90,7 @@ export function useAuth(): AuthContextValue {
   // console.log('context/AuthContext - useAuth 호출');
   // console.log(AuthContext);
   // console.log('useAuth 호출 - 현재 사용자:', getCachedUser());
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth는 AuthProvider 하위에서 사용해야 합니다');
-  return ctx;
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth는 AuthProvider 하위에서 사용해야 합니다');
+  return context;
 }

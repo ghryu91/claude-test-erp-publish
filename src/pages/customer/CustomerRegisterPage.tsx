@@ -24,6 +24,8 @@ import {
 import { CopyButton } from '@/components/ui/copy-button';
 import { CUSTOMER_COLUMNS, CUSTOMER_DATA, type Customer } from '@/data/customerData';
 import { CUSTOMER_TYPES, getCustomerTypeLabel } from '@/config/customerType';
+import PaginationLinks from '@/components/PaginationLinks';
+import api from '@/api/axiosInstance';
 import {
   PlusIcon,
   CheckIcon,
@@ -60,6 +62,7 @@ function toRecord<T extends object>(arr: T[]): Record<string, unknown>[] {
   return arr as unknown as Record<string, unknown>[];
 }
 
+
 /** 입력 필드 컴포넌트 — 라벨 + input */
 function Field({
   label,
@@ -93,6 +96,12 @@ export default function CustomerRegisterPage() {
   const [selected, setSelected] = useState<Customer | null>(CUSTOMER_DATA[6]); // RM_550 초기 선택
   const [isNew, setIsNew] = useState(false);
 
+  // 페이징 상태 — 서버 페이징 (API의 total/total_pages를 신뢰)
+  const PAGE_SIZE = 20;
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+
   /** 폼 레이아웃 모드 — 디자인 비교용 */
   const [layoutMode, setLayoutMode] = useState<'2col' | '12col' | '8-4'>('12col');
 
@@ -103,33 +112,42 @@ export default function CustomerRegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  /** API에서 거래처 목록 조회 */
-  const fetchCustomers = async () => {
+  /**
+   * API에서 거래처 목록 조회 (서버 페이징)
+   *
+   * API 응답의 total / total_pages를 그대로 사용한다.
+   * 페이지 이동 시 targetPage를 받아 해당 페이지만 조회한다.
+   */
+  const fetchCustomers = async (targetPage: number = 1) => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      params.set('page', '1');
-      params.set('size', '100');
+      const params: Record<string, string | number> = {
+        page: targetPage,
+        size: PAGE_SIZE,
+      };
       const word = searchWord.trim();
-      if (word) {
-        params.set(searchWordType, word);
-      }
-      if (filterType) params.set('customer_type', filterType);
+      if (word) params[searchWordType] = word;
+      if (filterType) params.customer_type = filterType;
 
-      const res = await fetch(`/api/v1/customers?${params.toString()}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      // API 응답 구조: { items: Customer[], total, page, size } 가정
+      const response = await api.get('/customers', { params });
+      const json = response.data;
+      // API 응답: { items, total, page, size, total_pages }
       const items: Customer[] = json.items ?? json.customers ?? [];
       setCustomers(items);
       setSelected(items[0] ?? null);
-    } catch (err) {
-      setError((err as Error).message);
+      setPage(json?.page ?? targetPage);
+      setTotal(json?.total ?? items.length);
+      setTotalPages(json?.total_pages ?? 1);
+    } catch (error) {
+      setError((error as Error).message);
     } finally {
       setLoading(false);
     }
   };
+
+  /** 페이지 이동 — 서버에서 해당 페이지 재조회 */
+  const handlePageChange = (p: number) => fetchCustomers(p);
 
   /** 최초 진입 시 거래처 목록 자동 조회 */
   useEffect(() => {
@@ -283,7 +301,7 @@ export default function CustomerRegisterPage() {
           <Button variant="outline" onClick={handleResetFilter} disabled={loading}>
             초기화
           </Button>
-          <Button onClick={fetchCustomers} disabled={loading} className="bg-gray-800 hover:bg-gray-900">
+          <Button onClick={() => fetchCustomers(1)} disabled={loading} className="bg-gray-800 hover:bg-gray-900">
             {loading ? <Spinner className="size-4" /> : <SearchIcon className="size-4" />}
             {loading ? '검색 중...' : '검색'}
           </Button>
@@ -298,7 +316,7 @@ export default function CustomerRegisterPage() {
       )}
       {error && <div className="text-sm text-red-500 mb-2">에러: {error}</div>}
 
-      <div className="text-sm text-gray-500 mb-2">총 {customers.length}개</div>
+      <div className="text-sm text-gray-500 mb-2">총 {total}개</div>
 
       {/* 거래처 정보 카드 (회사 정보 카드 스타일) */}
       <div className="border-t-4 border-blue-500 rounded-lg bg-white shadow-sm mb-4 p-4">
@@ -567,9 +585,17 @@ export default function CustomerRegisterPage() {
         tableId="customer-register-list"
         initialColumns={CUSTOMER_COLUMNS}
         data={toRecord(customers)}
-        title={`거래처 목록 (${customers.length}개)`}
+        title={`거래처 목록 (총 ${total}개 · ${page}/${totalPages} 페이지)`}
         onRowClick={handleRowClick}
         loading={loading}
+      />
+
+      {/* 페이징 */}
+      <PaginationLinks
+        page={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        className="mt-3"
       />
 
       {/* 편집 Dialog */}

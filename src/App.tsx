@@ -10,13 +10,13 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AppLayout from '@/components/layout/AppLayout';
-import UserListPage from '@/pages/UserListPage';
-import KeywordPage from '@/pages/KeywordPage';
-import CustomerPage from '@/pages/CustomerPage';
-import CustomerRegisterPage from '@/pages/CustomerRegisterPage';
-import RemoteDbQueryPage from '@/pages/RemoteDbQueryPage';
-import UserSearchPage from '@/pages/UserSearchPage';
-import SignInPage from '@/pages/SignInPage';
+import UserPage from '@/pages/user/UserPage';
+import UserSearchPage from '@/pages/user/UserSearchPage';
+import KeywordPage from '@/pages/keyword/KeywordPage';
+import CustomerPage from '@/pages/customer/CustomerPage';
+import CustomerRegisterPage from '@/pages/customer/CustomerRegisterPage';
+import RemoteDbQueryPage from '@/pages/system/RemoteDbQueryPage';
+import SignInPage from '@/pages/auth/SignInPage';
 
 export default function App() {
   return (
@@ -29,8 +29,8 @@ export default function App() {
           {/* 인증 필요 라우트 */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
-              <Route path="/" element={<UserListPage />} />
-              <Route path="/users" element={<UserListPage />} />
+              <Route path="/" element={<UserPage />} />
+              <Route path="/users" element={<UserPage />} />
               <Route path="/users/search" element={<UserSearchPage />} />
               <Route path="/keywords" element={<KeywordPage />} />
               <Route path="/customers" element={<CustomerPage />} />

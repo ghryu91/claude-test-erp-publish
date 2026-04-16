@@ -49,10 +49,10 @@ export default function SignInPage() {
     setError(null);
     try {
       await login({ login_id: loginId.trim(), password });
-    } catch (err: unknown) {
-      // axios 에러: err.response.data.detail에 서버 메시지가 들어옴
-      const axiosErr = err as { response?: { data?: { detail?: string } }; message?: string };
-      setError(axiosErr.response?.data?.detail || axiosErr.message || '로그인에 실패했습니다.');
+    } catch (error: unknown) {
+      // axios 에러: error.response.data.detail에 서버 메시지가 들어옴
+      const axiosError = error as { response?: { data?: { detail?: string } }; message?: string };
+      setError(axiosError.response?.data?.detail || axiosError.message || '로그인에 실패했습니다.');
     } finally {
       setLoading(false);
     }

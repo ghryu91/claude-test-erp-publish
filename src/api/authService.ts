@@ -24,9 +24,9 @@ import type { LoginRequest, LoginResponse, AuthUser } from '@/types/auth';
  * @returns LoginResponse 성공 시
  * @throws AxiosError 실패 시 (인터셉터가 401 처리)
  */
-export async function login(req: LoginRequest): Promise<LoginResponse> {
+export async function login(request: LoginRequest): Promise<LoginResponse> {
   // 1. 코드가 훨씬 간결해짐 (JSON 변환, 에러 체크 등을 api 인스턴스가 대신 함)
-  const { data } = await api.post<LoginResponse>('/auth/login', req);
+  const { data } = await api.post<LoginResponse>('/auth/login', request);
 
   // 2. 공통 처리는 인스턴스에서 하므로, 여기선 '로그인 전용' 로직만 수행
   setToken(data.access_token);
