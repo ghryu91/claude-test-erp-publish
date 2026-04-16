@@ -105,7 +105,7 @@ export default function UserListPage() {
         }
       } else {
         loadData(MOCK_MASTER_DATA as { company: CompanyInfo; users: ApiUser[] });
-        setAffiliates(MOCK_AFFILIATES_DATA.affiliates);
+        // setAffiliates(MOCK_AFFILIATES_DATA.affiliates);
       }
     } catch (err) {
       setError((err as Error).message);

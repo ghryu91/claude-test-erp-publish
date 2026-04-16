@@ -63,10 +63,32 @@
 - [x] 샘플 화면 2개 (사용자 목록, 검색어 관리)
 - [x] shadcn/ui 설치 + Button, Dialog 적용
 - [x] 페이지 분리 (pages/ 폴더)
+- [x] JWT 인증 시스템 (AuthContext + ProtectedRoute + axios 인터셉터)
+- [x] 로그인 페이지 UI + 템플릿 프리뷰 라우트 (/templates/sign-in)
+- [x] 사용자 검색 페이지 (GET /users/search, 검색 구분 드롭다운 + 페이징)
+- [x] Pagination 공용 컴포넌트 추출
+- [x] ResizableTable 엑셀 다운로드 prop (데이터 존재 시에만 노출)
+- [x] 엑셀 다운로드 — CSV 응답을 SheetJS로 xlsx 변환 저장
 - [ ] shadcn/ui 컴포넌트 학습 및 추가 적용
 - [ ] **다음: Phase 1 — Delphi 소스 분석 → API 설계**
 - [ ] 폴더 구조 재편 (기능별)
 - [ ] 공통 UI 컴포넌트 제작
+
+---
+
+## 커밋 이력 메모
+
+### 2026-04-16 — 인증/사용자 검색/페이징 (`54c75ee` 이후)
+
+`feat: JWT 인증 + 사용자 검색 페이지 + 공용 Pagination 컴포넌트`
+
+- 인증: AuthContext/ProtectedRoute + axios 인스턴스(토큰 자동 주입/401 리다이렉트)
+- 로그인 페이지 UI + `/templates/sign-in` 프리뷰 라우트 (사이드바에서 템플릿 확인용)
+- 사용자 검색 페이지(GET /users/search) — 검색 구분 드롭다운, 페이징, 상/하단 배치
+- Pagination 컴포넌트 추출 — 검색/목록 페이지 재사용
+- ResizableTable 엑셀 다운로드 prop 추가 (데이터 있을 때만 노출)
+- 엑셀 다운로드: CSV 응답을 xlsx(SheetJS)로 변환 저장
+- `.continue/` gitignore 추가, `docs/AUTH_API.md` 신규
 
 ---
 
