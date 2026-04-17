@@ -89,7 +89,7 @@ const MENU_GROUPS: MenuGroup[] = [
         title: '사용자 관리',
         icon: UsersIcon,
         children: [
-          { title: '사용자 목록', url: '/users', status: 'done' },
+          { title: '업체별 사용자 목록', url: '/users', status: 'done' },
           { title: '사용자 검색', url: '/users/search', status: 'in-progress' },
           { title: '권한 관리', url: '/users/permissions', status: 'todo' },
           { title: '로그인(템플릿)', url: '/templates/sign-in', status: 'in-progress' },

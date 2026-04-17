@@ -26,7 +26,7 @@ interface SearchApiUser {
   authority_code: number;
   last_login_at: string | null;
   phone_number: string | null;
-  cust_code?: string;
+  cust_code: string;
   company_name?: string;
   programs: {
     program_no: number;

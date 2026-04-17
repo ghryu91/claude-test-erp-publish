@@ -14,6 +14,7 @@ export const USER_COLUMNS: ColumnDef[] = [
     ),
   },
   { key: 'userName',  label: '사용자명',    width: 90 },
+  { key: 'custCode',  label: '업체코드',    width: 90 },
   // { key: 'password',  label: '비밀번호',    width: 90 },
   
   {
@@ -59,6 +60,7 @@ export const USER_COLUMNS: ColumnDef[] = [
 
 export interface UserRow {
   userId: string;
+  custCode: string;
   userName: string | null;
   password: string | null;
   position: string | null;
@@ -71,6 +73,7 @@ export interface UserRow {
 // API 응답 → UserRow 변환
 export function mapApiUserToRow(apiUser: {
   user_id: string;
+  cust_code: string;
   user_name: string | null;
   password: string | null;
   position: string | null;
@@ -81,6 +84,7 @@ export function mapApiUserToRow(apiUser: {
 }): UserRow {
   return {
     userId: apiUser.user_id,
+    custCode: apiUser.cust_code,
     userName: apiUser.user_name,
     password: apiUser.password,
     position: apiUser.position,
@@ -94,14 +98,14 @@ export function mapApiUserToRow(apiUser: {
 }
 
 export const USER_DATA: UserRow[] = [
-  { userId: '081002',    userName: '김성국', password: '1234', position: '차장',   auth: 212, programs: ['영업', '모바일'],                          lastLogin: '2026-04-02 15:40', phone: '01028512491' },
-  { userId: '100700',    userName: '김성철', password: '0324', position: '이사',   auth: 186, programs: ['영업', '조합/세무', '모바일'],              lastLogin: '2026-03-30 14:38', phone: '01066652767' },
-  { userId: '3588',      userName: '전화종', password: '3588', position: '이사',   auth: 120, programs: ['영업'],                                    lastLogin: '2025-02-24 00:00', phone: null },
-  { userId: '6472',      userName: '박상무', password: '6472', position: null,     auth: 10,  programs: ['영업', '모바일'],                          lastLogin: '2026-04-03 06:54', phone: null },
-  { userId: '관제관리',  userName: null,     password: '1234', position: null,     auth: 10,  programs: ['GPS/RT'],                                  lastLogin: '2026-01-09 00:00', phone: null },
-  { userId: '신우출하',  userName: null,     password: '1234', position: null,     auth: 81,  programs: ['출하', 'GPS/RT'],                          lastLogin: '2026-04-03 00:00', phone: null },
-  { userId: '전자테스트', userName: '변강옥', password: '1234', position: '과장', auth: 10,  programs: ['영업'],                                    lastLogin: '2017-06-14 00:00', phone: null },
-  { userId: 'alstn',     userName: '최민수', password: '1234', position: '차장',   auth: 211, programs: ['영업', '품질', '모바일'],                  lastLogin: '2026-04-03 07:17', phone: '01071111522' },
-  { userId: 'ditl2000',  userName: '이재성', password: '1234', position: '영화대표', auth: 70, programs: ['영업', '모바일'],                         lastLogin: '2026-04-03 10:06', phone: '01082518523' },
-  { userId: 'gary5078',  userName: '문우진', password: '1234', position: null,     auth: 147, programs: ['출하', '영업', '품질', '조합/세무', 'GPS/RT', '모바일'], lastLogin: '2026-04-03 06:34', phone: '01072405078' },
+  { userId: '081002',    custCode: 'RM_505', userName: '김성국', password: '1234', position: '차장',   auth: 212, programs: ['영업', '모바일'],                          lastLogin: '2026-04-02 15:40', phone: '01028512491' },
+  { userId: '100700',    custCode: 'RM_505',    userName: '김성철', password: '0324', position: '이사',   auth: 186, programs: ['영업', '조합/세무', '모바일'],              lastLogin: '2026-03-30 14:38', phone: '01066652767' },
+  { userId: '3588',     custCode: 'RM_505',     userName: '전화종', password: '3588', position: '이사',   auth: 120, programs: ['영업'],                                    lastLogin: '2025-02-24 00:00', phone: null },
+  { userId: '6472',    custCode: 'RM_505',      userName: '박상무', password: '6472', position: null,     auth: 10,  programs: ['영업', '모바일'],                          lastLogin: '2026-04-03 06:54', phone: null },
+  { userId: '관제관리',    custCode: 'RM_505',  userName: null,     password: '1234', position: null,     auth: 10,  programs: ['GPS/RT'],                                  lastLogin: '2026-01-09 00:00', phone: null },
+  { userId: '신우출하',    custCode: 'RM_505',  userName: null,     password: '1234', position: null,     auth: 81,  programs: ['출하', 'GPS/RT'],                          lastLogin: '2026-04-03 00:00', phone: null },
+  { userId: '전자테스트',    custCode: 'RM_505', userName: '변강옥', password: '1234', position: '과장', auth: 10,  programs: ['영업'],                                    lastLogin: '2017-06-14 00:00', phone: null },
+  { userId: 'alstn',    custCode: 'RM_505',     userName: '최민수', password: '1234', position: '차장',   auth: 211, programs: ['영업', '품질', '모바일'],                  lastLogin: '2026-04-03 07:17', phone: '01071111522' },
+  { userId: 'ditl2000',    custCode: 'RM_505',  userName: '이재성', password: '1234', position: '영화대표', auth: 70, programs: ['영업', '모바일'],                         lastLogin: '2026-04-03 10:06', phone: '01082518523' },
+  { userId: 'gary5078',    custCode: 'RM_505',  userName: '문우진', password: '1234', position: null,     auth: 147, programs: ['출하', '영업', '품질', '조합/세무', 'GPS/RT', '모바일'], lastLogin: '2026-04-03 06:34', phone: '01072405078' },
 ];
