@@ -17,6 +17,7 @@ import CustomerPage from '@/pages/customer/CustomerPage';
 import CustomerRegisterPage from '@/pages/customer/CustomerRegisterPage';
 import RemoteDbQueryPage from '@/pages/system/RemoteDbQueryPage';
 import SignInPage from '@/pages/auth/SignInPage';
+import ExpensePage from '@/pages/expense/ExpensePage';
 
 export default function App() {
   return (
@@ -30,12 +31,23 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/" element={<UserPage />} />
-              <Route path="/users" element={<UserPage />} />
-              <Route path="/users/search" element={<UserSearchPage />} />
               <Route path="/keywords" element={<KeywordPage />} />
-              <Route path="/customers" element={<CustomerPage />} />
-              <Route path="/customers/register" element={<CustomerRegisterPage />} />
               <Route path="/dev/remote-db" element={<RemoteDbQueryPage />} />
+              {/* 서비스별 진입 경로 — 아직 구현 전이므로 placeholder */}
+              <Route path="/master" element={<PlaceholderPage />} />
+              <Route path="/master/*" element={<PlaceholderPage />} />
+              <Route path="/master/customers" element={<CustomerPage />} />
+              <Route path="/master/customers/register" element={<CustomerRegisterPage />} />
+              <Route path="/master/users" element={<UserPage />} />
+              <Route path="/master/users/search" element={<UserSearchPage />} />
+              <Route path="/master/dev/remote-db" element={<RemoteDbQueryPage />} />
+              <Route path="/erp" element={<PlaceholderPage />} />
+              <Route path="/erp/accounting/receipts" element={<ExpensePage />} />
+              <Route path="/erp/*" element={<PlaceholderPage />} />
+              <Route path="/remicon" element={<PlaceholderPage />} />
+              <Route path="/remicon/*" element={<PlaceholderPage />} />
+              <Route path="/ascon" element={<PlaceholderPage />} />
+              <Route path="/ascon/*" element={<PlaceholderPage />} />
               {/* 템플릿 프리뷰용 — 사이드바에서 로그인 화면 UI만 확인 */}
               <Route path="/templates/sign-in" element={<SignInPage />} />
               {/* 아직 구현되지 않은 페이지들은 추후 추가 */}

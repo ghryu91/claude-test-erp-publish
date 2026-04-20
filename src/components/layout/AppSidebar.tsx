@@ -1,8 +1,9 @@
 /**
  * AppSidebar - 좌측 네비게이션 사이드바
  *
- * 카테고리별 메뉴 그룹을 표시하며, 대메뉴 클릭 시 하위 메뉴가 펼쳐진다.
- * react-router-dom의 Link를 사용하여 페이지 전환 처리.
+ * 상단 ServiceSwitcher로 현재 서비스(master/erp/remicon/ascon)를 표시·전환하고,
+ * 본문에는 해당 서비스의 MENU_GROUPS를 표시한다.
+ * react-router-dom의 Link로 페이지 전환 처리.
  */
 
 import { useLocation, Link } from 'react-router-dom';
@@ -26,31 +27,11 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from '@/components/ui/collapsible';
-import {
-  UsersIcon,
-  SearchIcon,
-  SettingsIcon,
-  ChevronRightIcon,
-  LayoutDashboardIcon,
-  BuildingIcon,
-  TruckIcon,
-  PackageIcon,
-  ClipboardListIcon,
-  LogOutIcon,
-} from 'lucide-react';
+import { ChevronRightIcon, LogOutIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-
-/** 작업 진행 상태 */
-type WorkStatus = 'in-progress' | 'done' | 'todo';
-
-/** 메뉴 항목 타입 정의 */
-interface MenuItem {
-  title: string;
-  url?: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  status?: WorkStatus;
-  children?: { title: string; url: string; status?: WorkStatus }[];
-}
+import { getCurrentService } from '@/lib/service';
+import { SERVICE_MENUS, type WorkStatus } from './serviceMenus';
+import ServiceSwitcher from './ServiceSwitcher';
 
 /** 상태 뱃지 — [작업중]/[완료]/[미작업] */
 function StatusBadge({ status }: { status?: WorkStatus }) {
@@ -68,106 +49,13 @@ function StatusBadge({ status }: { status?: WorkStatus }) {
   );
 }
 
-/** 메뉴 그룹 타입 정의 */
-interface MenuGroup {
-  label: string;
-  items: MenuItem[];
-}
-
-/** 사이드바 메뉴 구조 — 카테고리 > 대메뉴 > 중메뉴 */
-const MENU_GROUPS: MenuGroup[] = [
-  {
-    label: '기본 관리',
-    items: [
-      {
-        title: '대시보드',
-        url: '/',
-        icon: LayoutDashboardIcon,
-        status: 'todo',
-      },
-      {
-        title: '사용자 관리',
-        icon: UsersIcon,
-        children: [
-          { title: '업체별 사용자 목록', url: '/users', status: 'done' },
-          { title: '사용자 검색', url: '/users/search', status: 'in-progress' },
-          { title: '권한 관리', url: '/users/permissions', status: 'todo' },
-          { title: '로그인(템플릿)', url: '/templates/sign-in', status: 'in-progress' },
-        ],
-      },
-      {
-        title: '기본 검색어(테스트 페이지)',
-        url: '/keywords',
-        icon: SearchIcon,
-        status: 'todo',
-      },
-    ],
-  },
-  {
-    label: '영업 관리',
-    items: [
-      {
-        title: '거래처 관리',
-        icon: BuildingIcon,
-        children: [
-          { title: '거래처 목록(테스트)', url: '/customers', status: 'in-progress' },
-          { title: '거래처 목록2', url: '/customers/register', status: 'in-progress' },
-          { title: '계열사 관리', url: '/customers/affiliates', status: 'todo' },
-        ],
-      },
-      {
-        title: '수주 관리',
-        icon: ClipboardListIcon,
-        children: [
-          { title: '수주 등록', url: '/orders/new', status: 'todo' },
-          { title: '수주 현황', url: '/orders', status: 'todo' },
-        ],
-      },
-    ],
-  },
-  {
-    label: '운송 관리',
-    items: [
-      {
-        title: '배차 관리',
-        icon: TruckIcon,
-        children: [
-          { title: '배차 등록', url: '/dispatch/new', status: 'todo' },
-          { title: '배차 현황', url: '/dispatch', status: 'todo' },
-        ],
-      },
-      {
-        title: '출하 관리',
-        icon: PackageIcon,
-        children: [
-          { title: '출하 등록', url: '/shipment/new', status: 'todo' },
-          { title: '출하 현황', url: '/shipment', status: 'todo' },
-        ],
-      },
-    ],
-  },
-  {
-    label: '시스템',
-    items: [
-      {
-        title: '설정',
-        url: '/settings',
-        icon: SettingsIcon,
-        status: 'todo',
-      },
-      {
-        title: '원격 DB 쿼리',
-        url: '/dev/remote-db',
-        icon: SettingsIcon,
-        status: 'in-progress',
-      },
-    ],
-  },
-];
-
 export default function AppSidebar() {
   const location = useLocation();
   const { user, logout } = useAuth();
+
+  /** 현재 활성 서비스 — pathname 기반 (추후 hostname 기반으로 교체 가능) */
+  const currentService = getCurrentService(location.pathname);
+  const menuGroups = SERVICE_MENUS[currentService];
 
   /** 현재 경로가 주어진 URL과 일치하는지 확인 */
   const isActive = (url: string) => location.pathname === url;
@@ -178,9 +66,12 @@ export default function AppSidebar() {
 
   return (
     <Sidebar>
-      {/* 사이드바 상단 로고 영역 */}
-      <SidebarHeader className="border-b border-sidebar-border px-4 py-3">
-        <div className="flex items-center gap-2">
+      {/* 사이드바 상단 — 서비스 전환 스위처 */}
+      <SidebarHeader className="border-b border-sidebar-border p-2">
+        <ServiceSwitcher current={currentService} />
+
+        {/* 기존 ERP SYSTEM 로고 영역 — 서비스 스위처로 대체됨
+        <div className="flex items-center gap-2 px-2 py-1">
           <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
             E
           </div>
@@ -189,11 +80,12 @@ export default function AppSidebar() {
             <div className="text-[11px] text-muted-foreground">v1.0.0</div>
           </div>
         </div>
+        */}
       </SidebarHeader>
 
-      {/* 메뉴 본문 */}
+      {/* 메뉴 본문 — 현재 서비스의 메뉴 그룹만 표시 */}
       <SidebarContent>
-        {MENU_GROUPS.map((group) => (
+        {menuGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>

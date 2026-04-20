@@ -12,3 +12,4 @@
 | WORKFLOW.md | docs/ | 진행 순서 | Phase별 작업 순서, 현재 진행 상태, 체크리스트 |
 | PROJECT_STATUS.md | docs/ | 프로젝트 현황 | 완료된 작업, 다음 할 일, 현재 파일 구조 |
 | DOCS_INDEX.md | docs/ | 문서 안내 | 이 파일. 각 문서가 뭔지 설명 |
+| SERVICE_SWITCHER.md | docs/ | 서비스 전환 설계 | 사이드바 서비스 스위처(master/erp/remicon/ascon), Phase 1(path)→Phase 2(서브도메인) 전환 전략 |
