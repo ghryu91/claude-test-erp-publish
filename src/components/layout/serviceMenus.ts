@@ -65,6 +65,7 @@ export const SERVICE_MENUS: Record<ServiceKey, MenuGroup[]> = {
           children: [
             // { title: '거래처 목록(테스트)', url: '/master/customers', status: 'in-progress' },
             { title: '거래처 목록', url: '/master/customers/register', status: 'in-progress' },
+            { title: '거래처 목록', url: '/master/customers/admin', status: 'in-progress' },
             { title: '계열사 관리', url: '/master/customers/affiliates', status: 'todo' },
           ],
         },

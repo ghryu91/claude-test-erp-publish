@@ -15,6 +15,7 @@ import UserSearchPage from '@/pages/user/UserSearchPage';
 import KeywordPage from '@/pages/keyword/KeywordPage';
 import CustomerPage from '@/pages/customer/CustomerPage';
 import CustomerRegisterPage from '@/pages/customer/CustomerRegisterPage';
+import CustomerAdminPage from '@/pages/customer/CustomerAdminPage';
 import RemoteDbQueryPage from '@/pages/system/RemoteDbQueryPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import ExpensePage from '@/pages/expense/ExpensePage';
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="/master/*" element={<PlaceholderPage />} />
               <Route path="/master/customers" element={<CustomerPage />} />
               <Route path="/master/customers/register" element={<CustomerRegisterPage />} />
+              <Route path="/master/customers/admin" element={<CustomerAdminPage />} />
               <Route path="/master/users" element={<UserPage />} />
               <Route path="/master/users/search" element={<UserSearchPage />} />
               <Route path="/master/dev/remote-db" element={<RemoteDbQueryPage />} />

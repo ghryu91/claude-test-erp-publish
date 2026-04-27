@@ -1,5 +1,33 @@
 import { useState } from 'react';
 import { useResizableColumns, type ColumnDef } from '../hooks/useResizableColumns';
+import PaginationLinks from './PaginationLinks';
+import Pagination from './Pagination';
+
+/**
+ * 페이지네이션 설정 — variant에 따라 내부적으로 다른 모듈을 렌더링
+ * - 'links': PaginationLinks (숫자 링크 스타일)
+ * - 'full':  Pagination (페이지 크기 선택 + 처음/이전/다음/마지막 버튼)
+ */
+export type PaginationConfig =
+  | {
+      variant: 'links';
+      page: number;
+      totalPages: number;
+      onPageChange: (p: number) => void;
+      siblingCount?: number;
+    }
+  | {
+      variant: 'full';
+      page: number;
+      totalPages: number;
+      size: number;
+      total: number;
+      onPageChange: (p: number) => void;
+      onSizeChange: (s: number) => void;
+      sizeOptions?: number[];
+      disabled?: boolean;
+      unit?: string;
+    };
 
 interface Props {
   tableId: string;
@@ -15,9 +43,43 @@ interface Props {
   onExcelDownload?: () => void;
   /** 엑셀 다운로드 진행 중 여부 — 버튼 disabled/스피너 제어 */
   exporting?: boolean;
+  /** 페이지네이션 설정 — 전달 시 variant에 맞는 모듈을 내부 렌더링 */
+  pagination?: PaginationConfig;
+  /** 페이지네이션 위치 제어 (기본 'both') */
+  paginationPosition?: 'top' | 'bottom' | 'both';
 }
 
-export default function ResizableTable({ tableId, initialColumns, data, title, onRowClick, loading = false, skeletonRows = 8, onExcelDownload, exporting = false }: Props) {
+/** 페이지네이션 설정 → 실제 엘리먼트 */
+function renderPagination(cfg: PaginationConfig) {
+  if (cfg.variant === 'links') {
+    return (
+      <PaginationLinks
+        page={cfg.page}
+        totalPages={cfg.totalPages}
+        onPageChange={cfg.onPageChange}
+        siblingCount={cfg.siblingCount}
+      />
+    );
+  }
+  return (
+    <Pagination
+      page={cfg.page}
+      totalPages={cfg.totalPages}
+      size={cfg.size}
+      total={cfg.total}
+      onPageChange={cfg.onPageChange}
+      onSizeChange={cfg.onSizeChange}
+      sizeOptions={cfg.sizeOptions}
+      disabled={cfg.disabled}
+      unit={cfg.unit}
+    />
+  );
+}
+
+export default function ResizableTable({ tableId, initialColumns, data, title, onRowClick, loading = false, skeletonRows = 8, onExcelDownload, exporting = false, pagination, paginationPosition = 'both' }: Props) {
+  const showTop = pagination && (paginationPosition === 'top' || paginationPosition === 'both');
+  const showBottom = pagination && (paginationPosition === 'bottom' || paginationPosition === 'both');
+  const paginationNode = pagination ? renderPagination(pagination) : null;
   const { columns, startResize, onDragStart, onDragOver, onDrop, resetColumns } =
     useResizableColumns(tableId, initialColumns);
 
@@ -47,6 +109,11 @@ export default function ResizableTable({ tableId, initialColumns, data, title, o
           )}
         </div>
       </div>
+
+      {/* 상단 페이지네이션 */}
+      {showTop && (
+        <div className="px-4 py-2 border-b border-gray-200 bg-white">{paginationNode}</div>
+      )}
 
       {/* 테이블 */}
       <div className="overflow-x-auto">
@@ -132,6 +199,11 @@ export default function ResizableTable({ tableId, initialColumns, data, title, o
           </tbody>
         </table>
       </div>
+
+      {/* 하단 페이지네이션 */}
+      {showBottom && (
+        <div className="px-4 py-2 border-t border-gray-200 bg-white">{paginationNode}</div>
+      )}
 
       {/* 힌트 */}
       <p className="text-[11px] text-gray-400 px-4 py-2 bg-gray-50 border-t border-gray-100 m-0">
