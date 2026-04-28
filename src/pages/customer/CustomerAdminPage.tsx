@@ -65,8 +65,8 @@ const emptyCustomer = (): Customer => ({
 
 /** 테이블 컬럼 정의 — ResizableTable에서 순서/너비 조정 가능 */
 const CUSTOMER_COLUMNS: ColumnDef[] = [
-  { key: 'cust_code', label: '코드', width: 120 },
-  { key: 'company_name', label: '상호', width: 240 },
+  { key: 'code', label: '코드', width: 120 },
+  { key: 'name', label: '상호', width: 240 },
   { key: 'parent_code', label: '상위', width: 110 },
   { key: 'business_number', label: '사업자번호', width: 140 },
   { key: 'representative', label: '대표자', width: 110 },
