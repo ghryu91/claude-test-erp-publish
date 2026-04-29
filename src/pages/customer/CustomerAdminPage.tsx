@@ -67,7 +67,19 @@ const emptyCustomer = (): Customer => ({
 const CUSTOMER_COLUMNS: ColumnDef[] = [
   { key: 'code', label: '코드', width: 120 },
   { key: 'name', label: '상호', width: 240 },
-  { key: 'parent.code', label: '상위', width: 110 },
+  { key: 'parent.code', label: '상위', width: 110,
+    render: (_val, row) => {
+        const parent = row.parent as { code?: string; name?: string } | null;
+       if (!parent) return '-';
+       return (
+         <span>
+           <span className="font-mono text-gray-500">{parent.code}</span>
+           <span className="ml-2">{parent.name}</span>
+         </span>
+       );
+     },
+   },
+   
   { key: 'business_number', label: '사업자번호', width: 140 },
   { key: 'representative', label: '대표자', width: 110 },
   { key: 'tel', label: '전화', width: 130 },
