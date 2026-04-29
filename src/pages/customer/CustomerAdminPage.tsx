@@ -31,7 +31,7 @@ import {
 
 /** 거래처 DTO — handoff 문서의 CustomerResponse와 동일 */
 interface Customer {
-  cust_code: string;
+  code: string;
   name: string;
   parent_code: string | null;
   business_number: string | null;
@@ -50,7 +50,7 @@ interface Customer {
 
 /** 빈 거래처 — 신규 등록 시 초기값 */
 const emptyCustomer = (): Customer => ({
-  cust_code: '',
+  code: '',
   name: '',
   parent_code: null,
   business_number: '',
@@ -67,7 +67,7 @@ const emptyCustomer = (): Customer => ({
 const CUSTOMER_COLUMNS: ColumnDef[] = [
   { key: 'code', label: '코드', width: 120 },
   { key: 'name', label: '상호', width: 240 },
-  { key: 'parent_code', label: '상위', width: 110 },
+  { key: 'parent.code', label: '상위', width: 110 },
   { key: 'business_number', label: '사업자번호', width: 140 },
   { key: 'representative', label: '대표자', width: 110 },
   { key: 'tel', label: '전화', width: 130 },
@@ -209,7 +209,7 @@ export default function CustomerAdminPage() {
 
   /** 행 클릭 — 상세 폼에 로드 */
   const handleRowClick = (row: Record<string, unknown>) => {
-    const found = list.find((c) => c.cust_code === row.cust_code);
+    const found = list.find((c) => c.code === row.code);
     if (found) {
       setSelected(found);
       setIsNew(false);
@@ -236,7 +236,7 @@ export default function CustomerAdminPage() {
   /** 저장 — 신규면 POST, 기존이면 PATCH */
   const handleSave = async () => {
     if (!selected) return;
-    const code = selected.cust_code.trim();
+    const code = selected.code.trim();
     if (!code) {
       alert('거래처 코드를 입력하세요.');
       return;
@@ -251,13 +251,13 @@ export default function CustomerAdminPage() {
       if (isNew) {
         const payload = {
           ...selected,
-          cust_code: code,
+          code: code,
           parent_code: selected.parent_code?.trim() || null,
         };
         await api.post('/admin/customers', payload);
       } else {
-        // PATCH — cust_code 제외
-        const { cust_code: _omit, created_at, created_by_name, updated_at, updated_by_name, ...rest } = selected;
+        // PATCH — code 제외
+        const { code: _omit, created_at, created_by_name, updated_at, updated_by_name, ...rest } = selected;
         void _omit; void created_at; void created_by_name; void updated_at; void updated_by_name;
         const payload = {
           ...rest,
@@ -277,7 +277,7 @@ export default function CustomerAdminPage() {
   /** 삭제 — soft delete */
   const handleDelete = async () => {
     if (!selected || isNew) return;
-    const code = selected.cust_code.trim();
+    const code = selected.code.trim();
     if (!code) return;
     if (!confirm(`[${code}] ${selected.name} 거래처를 삭제하시겠습니까?`)) return;
     setSaving(true);
@@ -314,7 +314,7 @@ export default function CustomerAdminPage() {
             >
               <option value="all">전체</option>
               <option value="company_name">상호</option>
-              <option value="cust_code">코드</option>
+              <option value="code">코드</option>
             </select>
             <input
               type="text"
@@ -381,12 +381,12 @@ export default function CustomerAdminPage() {
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-3">
                 <span className={`px-2.5 py-1 rounded text-xs font-bold text-white ${isNew ? 'bg-green-500' : 'bg-blue-500'}`}>
-                  {isNew ? '신규' : selected.cust_code?.trim() || '—'}
+                  {isNew ? '신규' : selected.code?.trim() || '—'}
                 </span>
                 <strong className="text-lg text-gray-900">
                   {selected.name || '(신규 거래처)'}
                 </strong>
-                {!isNew && selected.cust_code && <CopyButton value={selected.cust_code.trim()} />}
+                {!isNew && selected.code && <CopyButton value={selected.code.trim()} />}
                 {!selected.is_active && !isNew && (
                   <span className="px-2 py-0.5 rounded text-xs bg-gray-200 text-gray-700">비활성</span>
                 )}
@@ -399,8 +399,8 @@ export default function CustomerAdminPage() {
                 <div className="col-span-4">
                   <Field
                     label="코 드 *"
-                    value={selected.cust_code}
-                    onChange={(v) => updateField('cust_code', v)}
+                    value={selected.code}
+                    onChange={(v) => updateField('code', v)}
                     readOnly={!isNew}
                     placeholder="1~20자, 앞뒤 공백 금지"
                   />
